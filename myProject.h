@@ -2,5 +2,6 @@
 #define _myproject_h_
 int printMyName1(void);
 int printMyName2(void);
+int printMyName3(void);
 
 #endif
