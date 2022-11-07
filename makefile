@@ -1,4 +1,4 @@
-final.elf : main.o 1.o 2.o
+final.elf : 1.o 2.o main.o 
 	gcc -o final.elf 1.o 2.o
 1.o : 1.c myProject.h
 	gcc -c 1.c
