@@ -1,0 +1,1 @@
+cmd_/home/cz9812/GitHub/Grazie/Grazie/HW/hello_drv/hello_drv.ko := arm-linux-gnueabi-ld -EL -r  -T /home/cz9812/linux_kernel/scripts/module-common.lds --build-id  -o /home/cz9812/GitHub/Grazie/Grazie/HW/hello_drv/hello_drv.ko /home/cz9812/GitHub/Grazie/Grazie/HW/hello_drv/hello_drv.o /home/cz9812/GitHub/Grazie/Grazie/HW/hello_drv/hello_drv.mod.o

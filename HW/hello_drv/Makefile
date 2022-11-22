@@ -1,5 +1,5 @@
 obj-m := hello_drv.o
-KDIR := /home/jaemin/targetSrc/linux_kernel/ #=
+KDIR := /home/cz9812/linux_kernel/
 PWD := $(shell pwd)
 
 export ARCH=arm
