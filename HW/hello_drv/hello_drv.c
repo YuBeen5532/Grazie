@@ -1,5 +1,3 @@
-https://drive.google.com/file/d/1ofhYrRM5GafGD7LrpMq9chhjpol-
-Rerg/view?usp=sharing#include
 #include <linux/init.h> // module_init, module_exit 매크로 정의
 #include <linux/kernel.h> // printk 함수 정의
 #include <linux/module.h>// 모듈 관련 자료 구조 및 매크로 정의
@@ -41,37 +39,36 @@ static ssize_t hello_write(struct file *pfile, const char __user *pBuff, size_t 
 }
 
 static const struct file_operations hello_fops = {
-.owner = THIS_MODULE,
-.open = hello_open,
-.read =
-hello_read,
-.write = hello_write,
-.release = hello_release,
+    .owner = THIS_MODULE,
+    .open = hello_open,
+    .read = hello_read,
+    .write = hello_write,
+    .release = hello_release,
 };
 
 int flagRegisterSuccess = 0;
 
 int __init init_hello(void)
 {
-int ret;
-printk("Hello world.\n");
-ret = register_chrdev(HELLO_MAJOR_NUM, HELLO_NAME, &hello_fops);
-if ( ret < 0)
-{
-printk("Hello registr_chrdev fail\n");
-return ret; }
-flagRegisterSuccess = 1;
-return 0;
-}
+    int ret;
+    printk("Hello world.\n");
+    ret = register_chrdev(HELLO_MAJOR_NUM, HELLO_NAME, &hello_fops);
+    if ( ret < 0)
+    {
+        printk("Hello registr_chrdev fail\n");
+        return ret; }
+        flagRegisterSuccess = 1;
+        return 0;
+    }
 
 void __exit exit_hello(void)
 {
-if ( flagRegisterSuccess)
-{
-flagRegisterSuccess = 0;
-unregister_chrdev(HELLO_MAJOR_NUM, HELLO_NAME);
-}
-printk("Good-bye~ \n");
+    if ( flagRegisterSuccess)
+    {
+        flagRegisterSuccess = 0;
+        unregister_chrdev(HELLO_MAJOR_NUM, HELLO_NAME);
+    }
+    printk("Good-bye~ \n");
 }
 
 module_init(init_hello); // 모듈 로딩시(insmod) 해당 함수 호출
