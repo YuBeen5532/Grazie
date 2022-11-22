@@ -27,7 +27,7 @@ int main(int argc, char **argv)
     }
     printf("open success\n");
 
-    wirte(fd, &data, 4);
+    write(fd, &data, 4);
     read(fd, data, 4);
     printf("read value: %c%c%c%c\n", data[0],data[1],data[2],data[3]);
 
