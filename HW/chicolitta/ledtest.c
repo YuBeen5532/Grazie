@@ -15,11 +15,11 @@ int main(void)
 
 // open driver
 ledLibInit();
-ledOnOff (3, 1);
+ledOnOff (6, 1);
 int ledValue = ledStatus();
 printf("ledValue : %d\n", ledValue);
 
-sleep(30000);
+sleep(3000);
 ledLibExit();
 return 0;
 }

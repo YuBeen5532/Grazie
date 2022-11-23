@@ -1,18 +1,16 @@
-#include <fcntl.h>
 #include "led.h"
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdio.h>
+
 static unsigned int ledValue = 0;
 static int fd = 0;
-
-int ledStatus (void)
-{
-    return ledValue;
-}
 
 int ledOnOff (int ledNum, int onOff)
 {
 int i=1;
 i = i<<ledNum;
-ledValue = ledValue & (~i);
+ledValue = ledValue& (~i);
 if (onOff !=0) ledValue |= i;
 write (fd, &ledValue, 4);
 }
@@ -28,5 +26,10 @@ int ledLibExit(void)
 ledValue = 0;
 ledOnOff (0, 0);
 close(fd);
+}
+
+int ledStatus (void)
+{
+return ledValue;
 }
 
