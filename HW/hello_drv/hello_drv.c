@@ -1,3 +1,5 @@
+
+
 #include <linux/init.h> // module_init, module_exit 매크로 정의
 #include <linux/kernel.h> // printk 함수 정의
 #include <linux/module.h>// 모듈 관련 자료 구조 및 매크로 정의
@@ -40,7 +42,7 @@ static ssize_t hello_write(struct file *pfile, const char __user *pBuff, size_t 
 	return 0;
 }
 
-static long dev_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+static long hello_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 {   int cnt = 0, int k = 0;
     if (_IOC_TYPE (cmd) != 0x55) {printk("Wrong Magic#!\n"); return -1;}
     switch(_IOC_NR (cmd))
@@ -67,6 +69,7 @@ static const struct file_operations hello_fops = {
     .read = hello_read,
     .write = hello_write,
     .release = hello_release,
+    .unlocked_ioctl = hello_ioctl,
 };
 
 
