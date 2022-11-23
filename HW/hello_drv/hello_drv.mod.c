@@ -20,9 +20,9 @@ __attribute__((section("__versions"))) = {
 	{ 0x31a4702a, __VMLINUX_SYMBOL_STR(module_layout) },
 	{ 0x6bc3fbc0, __VMLINUX_SYMBOL_STR(__unregister_chrdev) },
 	{ 0x180b4c11, __VMLINUX_SYMBOL_STR(__register_chrdev) },
+	{ 0x67c2fa54, __VMLINUX_SYMBOL_STR(__copy_to_user) },
 	{ 0xfbc74f64, __VMLINUX_SYMBOL_STR(__copy_from_user) },
 	{ 0xfa2a45e, __VMLINUX_SYMBOL_STR(__memzero) },
-	{ 0x67c2fa54, __VMLINUX_SYMBOL_STR(__copy_to_user) },
 	{ 0xefd6cf06, __VMLINUX_SYMBOL_STR(__aeabi_unwind_cpp_pr0) },
 	{ 0x27e1a049, __VMLINUX_SYMBOL_STR(printk) },
 };

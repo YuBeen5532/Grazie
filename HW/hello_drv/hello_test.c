@@ -13,7 +13,7 @@
 
 int main(int argc, char **argv)
 {
-    char data[4] = {'5', '6', '7', '8'};
+    char array[2000] = {'1', '2', '3', '4', '5', '6', '7'};
     int fd;
     printf("enter test\n");
 
@@ -27,24 +27,12 @@ int main(int argc, char **argv)
     }
     printf("open success\n");
 
-    write(fd, &data, 4);
-    read(fd, data, 4);
-    printf("read value: %c%c%c%c\n", data[0],data[1],data[2],data[3]);
+    write(fd, &array, 1);
+    read(fd, array, 1);
     
-    for (int k=0;k<8;k++)
-    {
-        int request=1<<k;
-        unsigned int inputCmd = _IO(0x55, request);
-        printf("Enter CMD%d -> 0x%08x \t", request, inputCmd);
-        unsigned long returnValue = ioctl(fd, inputCmd, 0);
-    }
-    char array[20];
-    unsigned int inputCmd = _IOW(0x55, 99, array);
-    unsigned int long returnValue = loctl(fd,inputCmd,array);
-
-    inputCmd = _IOW(0x55, 98, int);
-    int count = 5;
-    returnValue = ioctl(fd, inputCmd, &count);
+    unsigned int inputCmd = _IOW(0x55, 98, int);
+    int count = 7;
+    unsigned int long returnValue = ioctl(fd, inputCmd, &count);
 
     close(fd);
     return 0;

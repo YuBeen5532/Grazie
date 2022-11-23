@@ -8,8 +8,8 @@
 
 #define HELLO_MAJOR_NUM 290
 #define HELLO_NAME "Hello"	
-
-static char array[2000] = {0,};
+#define max 2000
+static char array[max] = {'a','b','c','d','e','f','g','8','9'};
 
 static int hello_open(struct inode *node, struct file *pfile)
 {
@@ -19,40 +19,29 @@ static int hello_open(struct inode *node, struct file *pfile)
 
 static ssize_t hello_read(struct file *pfile, char __user *pBuff, size_t size, loff_t *filepos)
 {
-	char arrData[4] = {'1','2','3','4'};
 	printk("hello_read enter\n");
-	if ( size >= 4)
-		{
-		copy_to_user( pBuff, arrData, 4 );
-		//put_user (i, pBuff); //i 변수값을 pBuff 사용자 메모리값에 대입
-		return 4;
-		}
-		//pfile->f_flags 를 읽어보면 open시 줬던 옵션값을 읽힘: O_NONBLOCK 등
+		copy_to_user( pBuff, array, max );
 	return 0;
 }
 
 static ssize_t hello_write(struct file *pfile, const char __user *pBuff, size_t size, loff_t *filepos) {
-	char arrData[4];
 	printk("hello_write enter\n");
-	if( size >= 4 )	
-	{
-		copy_from_user ( arrData , pBuff , 4 );
-		// get_user ( i, pBuff ); //i변수에 pBuff의 값을 대입한다.
-		return 4; }
+		copy_from_user ( array , pBuff , max );
 	return 0;
 }
 
 static long hello_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
-{   int cnt = 0, int k = 0;
+{   int cnt = 0; int k = 0;
     if (_IOC_TYPE (cmd) != 0x55) {printk("Wrong Magic#!\n"); return -1;}
     switch(_IOC_NR (cmd))
     {
-        case 99: printk("-> %d\n",_IOC_SIZE (cmd));
+        case 99: printk("IOCLT Size : %d\n",_IOC_SIZE (cmd));
                 copy_from_user(array, arg, _IOC_SIZE(cmd));
                 break;
-        case 98: printk("-> %d\n", IOC_SIZE (cmd));
+        case 98: printk("IOCLT Size : %d\n",_IOC_SIZE (cmd));
                 copy_from_user(&cnt, arg, _IOC_SIZE(cmd));
-                for (k=0; k<cnt; k++) printk ("%c", array[k]); break;
+                for (k=0; k<cnt; k++) printk ("%d ", array[k]); 
+                printk ("\n"); break;
         default: break;
     }
 }
