@@ -19,7 +19,7 @@ ledOnOff (6, 1);
 int ledValue = ledStatus();
 printf("ledValue : %d\n", ledValue);
 
-sleep(3000);
+sleep(3000); //delay
 ledLibExit();
 return 0;
 }

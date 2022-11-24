@@ -1,7 +1,6 @@
 #include "led.h"
 #include <unistd.h>
 #include <fcntl.h>
-#include <stdio.h>
 
 static unsigned int ledValue = 0;
 static int fd = 0;
