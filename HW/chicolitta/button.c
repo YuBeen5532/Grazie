@@ -16,12 +16,13 @@
 
 int buttonInit(void)
 {
-if (probeButtonPath(buttonPath) == 0)
-return 0;
-fd=open (buttonPath, O_RDONLY);
-msgID = msgget (MESSAGE_ID, IPC_CREAT|0666);
-pthread_create(&buttonTh_id, NULL, buttonThFunc, NULL);
-return 1;
+    if (probeButtonPath(buttonPath) == 0)
+    return 0;
+    fd=open (buttonPath, O_RDONLY);
+    msgID = msgget (MESSAGE_ID, IPC_CREAT|0666);
+    pthread_create(&buttonTh_id1, NULL, buttonThFunc, NULL);
+    pthread_create(&buttonTh_id2, NULL, buttonThFunc, NULL);
+    return 1;
 }
 
 int buttonThFunc(void)
@@ -33,8 +34,10 @@ int buttonThFunc(void)
         B.messageNum=1;
         B.keyInput=A.code;
         B.pressed=A.value;
-        msgsnd(msgID, &B, sizeof(B)-4),0;
+        msgsnd(msgID, &B, sizeof(B)-4,0);
      }
+
+
 }
 
 int probeButtonPath(char *newPath)
