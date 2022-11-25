@@ -13,11 +13,11 @@
 #define PROBE_FILE "/proc/bus/input/devices" //PPT에 제시된 "이 파일을 까보면 event? 의 숫자를 알수 있다"는 바로 그 파일
 #define HAVE_TO_FIND_1 "N: Name=\"ecube-button\"\n"
 #define HAVE_TO_FIND_2 "H: Handlers=kbd event"
-
 //////////////////////////////////////////////////////////////
 int fd;
 int msgID;
-pthread_t buttonTh_id;
+pthread_t buttonTh_id1, buttonTh_id2;
+struct input_event Button_EVENT;
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 int probeButtonPath(char *newPath)	{
@@ -67,36 +67,63 @@ int buttonInit(void)
     }
     printf ("buttonPath: %s\r\n", buttonPath);
     fd=open (buttonPath, O_RDONLY);
-    msgID = msgget (MESSAGE_ID, IPC_CREAT|0666);
+    msgID = msgget (MESSAGE_ID, IPC_CREAT|0666);	
     if(msgID==-1){
 		printf ("Cannot get msgQueueID, Return!\r\n");
 		return -1;
-	}
-    pthread_create(&buttonTh_id, NULL, buttonThFunc, NULL);
-    // pthread_create(&buttonTh_id2, NULL, buttonThFunc, NULL); //추가할 필요가 없는 것같기도
+	}   
+    pthread_create(&buttonTh_id1, NULL, buttonThFunc1, NULL);
+    pthread_create(&buttonTh_id2, NULL, buttonThFunc2, NULL); 
     return 1;
 }
 ////////////////////////////////////////////////////////////////////////////
-void buttonThFunc(void)
+void buttonThFunc1(void) 
 {
-    int readSize;
-    BUTTON_MSG_T B;
-    struct input_event A;
+    int readSize, inputIndex;
+    BUTTON_MSG_T Send;
     while(1)
     {        
-        readSize = read(fd, &A, sizeof(A));
-        if (readSize != sizeof(stEvent))
+        readSize = read(fd, &Button_EVENT, sizeof(Button_EVENT));         
+        if (readSize != sizeof(Button_EVENT))
             continue;      
-        B.messageNum=1;
-        B.keyInput=A.code;
-        B.pressed=A.value;
-        msgsnd(msgID, &B, sizeof(B)-4,0);
+        Send.messageNum=1;
+        Send.keyInput=Button_EVENT.code;
+        Send.pressed=Button_EVENT.value;
+        msgsnd(msgID, &Send, sizeof(Send)-4,0);
+    }
+}
+
+void buttonThFunc2(void) 
+{
+    int returnValue=0;
+    BUTTON_MSG_T Recieve;
+    while(1){
+        returnValue=msgrcv(msgID, &Recieve, sizeof(Recieve)-4, 0, 0);
+        if(returnValue==-1) continue;
+	    if ( Button_EVENT.type == EV_KEY)
+	    {
+		    printf("EV_KEY(");
+		    switch(Recieve.keyInput) // 어떤 버튼 눌렀는지
+		    {
+			    case KEY_VOLUMEUP: printf("Volume up key):"); break;
+			    case KEY_HOME: printf("Home key):"); break;
+			    case KEY_SEARCH: printf("Search key):"); break;
+			    case KEY_BACK: printf("Back key):"); break;
+			    case KEY_MENU: printf("Menu key):"); break;
+			    case KEY_VOLUMEDOWN: printf("Volume down key):"); break;
+               default: break;
+		    }
+	        if ( Recieve.pressed ) printf("pressed\n"); // 버튼 눌렸는지 안눌렸는지
+	        else printf("released\n");
+	    } 
+	    else;
     }
 }
 /////////////////////////////////////////////////////////////////////////
 int buttonExit(void)
 {
-    //pthread_exit((void*)0);
-	pthread_join(buttonTh_id, NULL);	
+    //pthread_exit((void*)0)
+    pthread_join(buttonTh_id1, NULL);	
+    pthread_join(buttonTh_id2, NULL);	
 	close(fd);
 }
