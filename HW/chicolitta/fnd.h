@@ -1,1 +1,5 @@
-int fndDisp(void); //int fndDips 함수 원형 (이후 main에서 불러씀)
+#ifndef _FND_H_
+#define _FND_H_
+int fndDisp(int num , int dotflag);
+
+#endif _FND_H_
