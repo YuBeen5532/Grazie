@@ -14,39 +14,19 @@
 #define HAVE_TO_FIND_1 "N: Name=\"ecube-button\"\n"
 #define HAVE_TO_FIND_2 "H: Handlers=kbd event"
 
-int buttonInit(void)
-{
-    if (probeButtonPath(buttonPath) == 0)
-    return 0;
-    fd=open (buttonPath, O_RDONLY);
-    msgID = msgget (MESSAGE_ID, IPC_CREAT|0666);
-    pthread_create(&buttonTh_id1, NULL, buttonThFunc, NULL);
-    pthread_create(&buttonTh_id2, NULL, buttonThFunc, NULL);
-    return 1;
-}
+//////////////////////////////////////////////////////////////
+int fd;
+int msgID;
+pthread_t buttonTh_id;
+/////////////////////////////////////////////////////////////////////////////////////////////
 
-int buttonThFunc(void)
-{
-     while(1){
-        struct input_event A;
-        read(rd, &A, sizeof(A));
-        BUTTON_MSG_T B;
-        B.messageNum=1;
-        B.keyInput=A.code;
-        B.pressed=A.value;
-        msgsnd(msgID, &B, sizeof(B)-4,0);
-     }
-
-
-}
-
-int probeButtonPath(char *newPath)
-	{
+int probeButtonPath(char *newPath)	{
 	int returnValue = 0; //button에 해당하는 event#을 찾았나?
 	int number = 0; //찾았다면 여기에 집어넣자
 	FILE *fp = fopen(PROBE_FILE,"rt"); //파일을 열고
-	#define HAVE_TO_FIND_1 "N: Name=\"ecube-button\"\n"
-	#define HAVE_TO_FIND_2 "H: Handlers=kbd event"
+
+	#define HAVE_TO_FIND_1 "N: Name=\"ecube-button\"\n"   
+	#define HAVE_TO_FIND_2 "H: Handlers=kbd event"      
 
 	while(!feof(fp)) //끝까지 읽어들인다.
 	{
@@ -55,34 +35,68 @@ int probeButtonPath(char *newPath)
 	    //printf ("%s",tmpStr);
 	    if (strcmp(tmpStr,HAVE_TO_FIND_1) == 0)
 	    {
-	        printf("YES! I found!: %s\r\n", tmpStr);
+	        printf("YES! I found!: %s\r\n", tmpStr); //이것도 딱히 필요없을 듯??????
 	        returnValue = 1; //찾음
 	    }
-
-	if (
-	(returnValue == 1) && //찾은 상태에서
-	(strncasecmp(tmpStr, HAVE_TO_FIND_2, strlen(HAVE_TO_FIND_2)) == 0) //Event??을 찾았으면
-	)
-	{
-	    printf ("-->%s",tmpStr);
-	    printf("\t%c\r\n",tmpStr[strlen(tmpStr)-3]);
-	    number = tmpStr[strlen(tmpStr)-3] - '0';
-	    //Ascii character '0'-'9' (0x30-0x39)
-	    //to interger(0)
-	    break;
-	}
-}
+	    if (
+	        (returnValue == 1) && //찾은 상태에서
+	        (strncasecmp(tmpStr, HAVE_TO_FIND_2, strlen(HAVE_TO_FIND_2)) == 0)) //Event??을 찾았으면
+	    {
+	        printf ("-->%s",tmpStr);                     //print들 확인용으로 두고 나중에 없애는게??????
+	        printf("\t%c\r\n",tmpStr[strlen(tmpStr)-3]);
+	        number = tmpStr[strlen(tmpStr)-3] - '0';
+	        //Ascii character '0'-'9' (0x30-0x39)
+	        //to interger(0)
+	        break;
+	    }
+    }
 	fclose(fp);
 	if (returnValue == 1)
-	sprintf (newPath,"%s%d",INPUT_DEVICE_LIST,number);
+	    sprintf (newPath,"%s%d",INPUT_DEVICE_LIST,number);
 	return returnValue;
 }
-
-int bUttionExit(void)
+/////////////////////////////////////////////////////////////////////////
+int buttonInit(void)
 {
-    pthread_exit((void*)0);
+    char buttonPath[200] = {0,};
+    if (probeButtonPath(buttonPath) == 0)
+    {
+		printf ("ERROR! File Not Found!\r\n");      //나중에 printf는 지워도 될듯
+		printf ("Did you insmod?\r\n");
+		return 0;
+    }
+    printf ("buttonPath: %s\r\n", buttonPath);
+    fd=open (buttonPath, O_RDONLY);
+    msgID = msgget (MESSAGE_ID, IPC_CREAT|0666);
+    if(msgID==-1){
+		printf ("Cannot get msgQueueID, Return!\r\n");
+		return -1;
+	}
+    pthread_create(&buttonTh_id, NULL, buttonThFunc, NULL);
+    // pthread_create(&buttonTh_id2, NULL, buttonThFunc, NULL); //추가할 필요가 없는 것같기도
+    return 1;
 }
-
-
-//buttonThFunc 쓰레드 함수 작성 필요
-//while(1){을 돌면서 / read(); / msgsnd(); }
+////////////////////////////////////////////////////////////////////////////
+void buttonThFunc(void)
+{
+    int readSize;
+    BUTTON_MSG_T B;
+    struct input_event A;
+    while(1)
+    {        
+        readSize = read(fd, &A, sizeof(A));
+        if (readSize != sizeof(stEvent))
+            continue;      
+        B.messageNum=1;
+        B.keyInput=A.code;
+        B.pressed=A.value;
+        msgsnd(msgID, &B, sizeof(B)-4,0);
+    }
+}
+/////////////////////////////////////////////////////////////////////////
+int buttonExit(void)
+{
+    //pthread_exit((void*)0);
+	pthread_join(buttonTh_id, NULL);	
+	close(fd);
+}
