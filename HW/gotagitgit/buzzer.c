@@ -2,13 +2,50 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#define MAX_SCALE_STEP 8
+#define BUZZER_BASE_SYS_PATH "/sys/bus/platform/devices/"
+#define BUZZER_FILENAME "peribuzzer"
+#define BUZZER_ENABLE_NAME "enable"
+#define BUZZER_FREQUENCY_NAME "frequency"
+char gBuzzerBaseSysDir[128];
+ 
+static int bEnable;
+static int frequency;
+static int scale;
+
+
+
+
+
+
+void setFrequency(int frequency);
+
+
+
+
 int buzzerPlaySong(int scale)
-int buzzerStopSong(void)
+{
+    while(1)
+    {
+        buzzerEnable(1);
+    }
+    setFrequency(scale);
+    
+}
+
+
+int buzzerStopSong(void) 
+{
+    while(1)
+    {
+        buzzerEnable(0);
+    }
+}
 
 int buzzerInit(void)
 {
-	fd = open("/sys/bus/platform/devices/peribuzzer.XX/enable", O_WRONLY);
-	
+    findBuzzerSysPath();
+    fd = open(gBuzzerBaseSysDir, O_WRONLY);
 }
 
 
