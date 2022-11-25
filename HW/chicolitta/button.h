@@ -11,7 +11,8 @@ int pressed;
 } BUTTON_MSG_T;
 
 int buttonInit(void);
-//void buttonThFunc(void); 이건 필요없나????
+void *buttonThFunc1(void *arg);
+void *buttonThFunc2(void *arg);
 int buttonExit(void);
 
 #endif

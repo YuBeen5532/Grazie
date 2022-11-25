@@ -72,12 +72,12 @@ int buttonInit(void)
 		printf ("Cannot get msgQueueID, Return!\r\n");
 		return -1;
 	}   
-    pthread_create(&buttonTh_id1, NULL, buttonThFunc1, NULL);
-    pthread_create(&buttonTh_id2, NULL, buttonThFunc2, NULL); 
+    pthread_create(&buttonTh_id1, NULL, &buttonThFunc1, NULL);
+    pthread_create(&buttonTh_id2, NULL, &buttonThFunc2, NULL); 
     return 1;
 }
 ////////////////////////////////////////////////////////////////////////////
-void buttonThFunc1(void) 
+void* buttonThFunc1(void *arg) 
 {
     int readSize, inputIndex;
     BUTTON_MSG_T Send;
@@ -93,14 +93,14 @@ void buttonThFunc1(void)
     }
 }
 
-void buttonThFunc2(void) 
+void* buttonThFunc2(void *arg) 
 {
     int returnValue=0;
     BUTTON_MSG_T Recieve;
     while(1){
         returnValue=msgrcv(msgID, &Recieve, sizeof(Recieve)-4, 0, 0);
         if(returnValue==-1) continue;
-	    if ( Button_EVENT.type == EV_KEY)
+	    if ( Recieve.messageNum == 1)
 	    {
 		    printf("EV_KEY(");
 		    switch(Recieve.keyInput) // 어떤 버튼 눌렀는지
@@ -126,4 +126,5 @@ int buttonExit(void)
     pthread_join(buttonTh_id1, NULL);	
     pthread_join(buttonTh_id2, NULL);	
 	close(fd);
+	return 1;
 }
