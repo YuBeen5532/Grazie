@@ -10,6 +10,9 @@
 #define BUZZER_ENABLE_NAME "enable"
 #define BUZZER_FREQUENCY_NAME "frequency"
 
+
+//buzzer-미니게임성공, 레벨업, 체력 적을때 넣을수도
+//교수님이 보내주신 음악 메인BGM쓰고 음향꺼놓는 것도 시현할 때 보여주기 => 봐서. 메인BGM만 끄도록?
 int fd;
 char gBuzzerBaseSysDir[128]; ///sys/bus/platform/devices/peribuzzer.XX 가 결정됨
 
@@ -55,14 +58,6 @@ int findBuzzerSysPath()
 }
 //버저 경로 찾기: /sys/bus/platform/devices/peribuzzer.XX 의 XX를 결정하는 것
 
-void doHelp(void)
-{
-		printf("Usage:\n");
-		printf("buzzertest <buzzerNo> \n");
-		printf("buzzerNo: \n");
-		printf("do(1),re(2),mi(3),fa(4),sol(5),ra(6),si(7),do(8) \n");
-		printf("off(0)\n");
-}
 
 void buzzerEnable(int bEnable)
 {
@@ -81,4 +76,20 @@ void setFrequency(int frequency)
 		int fd=open(path,O_WRONLY);
 		dprintf(fd, "%d", frequency);
 		close(fd);
+}
+
+
+
+
+
+
+
+
+void doHelp(void)
+{
+		printf("Usage:\n");
+		printf("buzzertest <buzzerNo> \n");
+		printf("buzzerNo: \n");
+		printf("do(1),re(2),mi(3),fa(4),sol(5),ra(6),si(7),do(8) \n");
+		printf("off(0)\n");
 }
