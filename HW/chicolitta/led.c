@@ -17,8 +17,11 @@ write (fd, &ledValue, 4);
 int ledLibInit(void)
 {
     fd=open("/dev/periled", O_WRONLY);
-	ledValue = 0;
+	ledValue = 0xFF;           //풀피
+    write (fd, &ledValue, 4);
 }
+
+// =>체력깎이거나 오를 때 쉬프트써서 
 
 int ledLibExit(void)
 {
