@@ -105,16 +105,16 @@ void* buttonThFunc2(void *arg)
 		    printf("EV_KEY(");
 		    switch(Recieve.keyInput) // 어떤 버튼 눌렀는지
 		    {
-			    case KEY_VOLUMEUP: printf("Volume up key):"); break;
-			    case KEY_HOME: printf("Home key):"); break;
-			    case KEY_SEARCH: printf("Search key):"); break;
-			    case KEY_BACK: printf("Back key):"); break;
-			    case KEY_MENU: printf("Menu key):"); break;
-			    case KEY_VOLUMEDOWN: printf("Volume down key):"); break;
+			    case KEY_VOLUMEUP: printf("5OK):"); break;       // 화면상변화, 아이템창에서 |아이템창나가기|옷|특식/간식|   |     | =>left, right 사용
+			    case KEY_HOME: printf("1Home key):"); break;     // 
+			    case KEY_SEARCH: printf("3Left):"); break;       // 화면상변화
+			    //case KEY_BACK: printf("Back key):"); break;     
+			    case KEY_MENU: printf("4Right):"); break;        // 화면상변화
+			    case KEY_VOLUMEDOWN: printf("6Volume On/Off):"); break; //buzzer
                default: break;
 		    }
-	        if ( Recieve.pressed ) printf("pressed\n"); // 버튼 눌렸는지 안눌렸는지
-	        else printf("released\n");
+	        //if ( Recieve.pressed ) printf("pressed\n"); // 버튼 눌렸는지 안눌렸는지
+	        //else printf("released\n");
 	    } 
 	    else;
     }
