@@ -6,6 +6,7 @@
 #define LINE_BUFF_NUM (COLUMN_NUM + 4) // for dummy
 #define MODE_CMD 0
 #define MODE_DATA 1
+
 #define CMD_DISPLAY_MODE 0x10          // 커맨드 위치에 넣을 수 있는 값
     #define BIT_DISPLAY_MODE_CURSOR_DISP 0x01
     #define BIT_DISPLAY_MODE_CURSOR_BLINK 0x02

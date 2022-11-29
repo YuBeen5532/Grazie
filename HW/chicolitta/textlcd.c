@@ -17,10 +17,12 @@ int lcdtextwrite(const char *str1, const char *str2, int lineFlag){
     int len1, len2;
     memset(&stlcd,0,sizeof(stTextLCD)); // 구조체 초기화
     linenum = lineFlag;  
-    printf("linenum :%d\n", linenum);  
+    printf("linenum :%d\n", linenum);
+
+    //첫번째줄 또는 두번째줄 중 한 줄 선택해서 쓰기 
     if (linenum == 1){        
         if (str2==NULL) { // 1번째 줄 쓰기
-            stlcd.cmdData = CMD_DATA_WRITE_LINE_1;       
+            stlcd.cmdData = CMD_DATA_WRITE_LINE_1; // 0      
             len1 = strlen(str1);      // 문자열길이
             if (len1 > COLUMN_NUM)    //한 줄에 들어갈 수 있는 문자길이 16
                 memcpy(stlcd.TextData[stlcd.cmdData - 1], str1, COLUMN_NUM);//몇번째 라인에 쓸지 메모리를 복사?
@@ -29,7 +31,7 @@ int lcdtextwrite(const char *str1, const char *str2, int lineFlag){
                 memcpy(stlcd.TextData[stlcd.cmdData - 1], str1, len1);
         }
         else if (str1==NULL){ // 2번째 줄 쓰기
-            stlcd.cmdData = CMD_DATA_WRITE_LINE_2;  
+            stlcd.cmdData = CMD_DATA_WRITE_LINE_2; // 1 
             len2 = strlen(str2);      // 문자열길이
             if (len2 > COLUMN_NUM)    // 한 줄에 들어갈 수 있는 문자길이 16
                 memcpy(stlcd.TextData[stlcd.cmdData - 1], str2, COLUMN_NUM);//몇번째 라인에 쓸지 메모리를 복사?
@@ -39,6 +41,8 @@ int lcdtextwrite(const char *str1, const char *str2, int lineFlag){
                 memcpy(stlcd.TextData[stlcd.cmdData - 1], str2, len2);
         }
     }
+
+    // 첫번째줄, 두번째줄 동시에 쓰기 또한 가능
     else if ( linenum == 2){
         stlcd.cmdData = CMD_DATA_WRITE_BOTH_LINE; 
         len1 = strlen(str1);
@@ -47,6 +51,7 @@ int lcdtextwrite(const char *str1, const char *str2, int lineFlag){
             memcpy(stlcd.TextData[0], str1, COLUMN_NUM);    
         else 
             memcpy(stlcd.TextData[0], str1, len1);
+
         if (len2 > COLUMN_NUM)
             memcpy(stlcd.TextData[1], str2, COLUMN_NUM);
         else 
