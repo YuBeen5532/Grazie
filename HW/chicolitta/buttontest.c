@@ -7,6 +7,7 @@
 #include <sys/ioctl.h> // for ioctl
 #include <sys/msg.h>
 #include <pthread.h>
+#include "button.h"
 
 // first read input device
 #define INPUT_DEVICE_LIST "/dev/input/event"

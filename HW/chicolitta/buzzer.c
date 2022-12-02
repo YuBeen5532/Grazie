@@ -85,7 +85,7 @@ void setFrequency(int frequency)
 
 
 
-void doHelp(void)
+void doHelp()
 {
 		printf("Usage:\n");
 		printf("buzzertest <buzzerNo> \n");

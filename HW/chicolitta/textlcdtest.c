@@ -4,6 +4,8 @@
 #include <linux/input.h>
 #include <unistd.h> // for open/close
 #include <fcntl.h> // for O_RDWR
+#include "textlcd.h"
+
 
 int main(void){
 

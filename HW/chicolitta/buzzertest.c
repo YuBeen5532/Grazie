@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "buzzer.h"
 #define MAX_SCALE_STEP 8
 
 char gBuzzerBaseSysDir[128]; ///sys/busz/platform/devices/peribuzzer.XX 가 결정됨
@@ -34,7 +35,7 @@ int main(int argc , char **argv)
 
     if ( freIndex == 0)// disable
     {
-        buzzerStopSong(0);
+        buzzerStopSong();
     }
     else
     {
