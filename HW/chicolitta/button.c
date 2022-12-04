@@ -83,13 +83,13 @@ void* buttonThFunc1(void *arg)
     BUTTON_MSG_T Send;
     while(1)
     {        
-        readSize = read(fd, &Button_EVENT, sizeof(Button_EVENT));         
-        if (readSize != sizeof(Button_EVENT))
+        readSize = read(fd, &Button_EVENT, sizeof(Button_EVENT)); //버튼 읽음         
+        if (readSize != sizeof(Button_EVENT)) 
             continue;      
         Send.messageNum=Button_EVENT.type;
         Send.keyInput=Button_EVENT.code;
         Send.pressed=Button_EVENT.value;
-        msgsnd(msgID, &Send, sizeof(Send)-4,0);
+        msgsnd(msgID, &Send, sizeof(Send)-4,0);                   // 메세지큐 사용해서 버튼 정보 보냄
     }
 }
 
@@ -113,6 +113,7 @@ void* buttonThFunc2(void *arg)
 			    case KEY_MENU: printf("4Right):"); break;        // 화면상변화
 			    case KEY_VOLUMEDOWN: printf("6Volume On/Off):"); break; //buzzer
                default: break;
+
 		    }
 	        if ( Recieve.pressed ) printf("pressed\n"); // 버튼 눌렸는지 안눌렸는지
 	        else printf("released\n");
