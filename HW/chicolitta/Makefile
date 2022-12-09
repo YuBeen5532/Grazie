@@ -1,13 +1,15 @@
-all: ledtest.c buttontest.c fndtest.c buzzertest.c colorledtest.c textlcdtest.c temperatureTest.c libMyPeri.a
+all: ledtest.c buttontest.c fndtest.c buzzertest.c colorledtest.c textlcdtest.c temperatureTest.c accelMagGyrotest.c libMyPeri.a
 	arm-linux-gnueabi-gcc -o colorledtest colorledtest.c -lMyPeri -L.
 	arm-linux-gnueabi-gcc -o ledtest ledtest.c -lMyPeri -L.
 	arm-linux-gnueabi-gcc -o fndtest fndtest.c -lMyPeri -L.
 	arm-linux-gnueabi-gcc -o buttontest buttontest.c -lMyPeri -lpthread -L.
-	arm-linux-gnueabi-gcc -o buzzertest buzzertest.c -lMyPeri -L.
+	arm-linux-gnueabi-gcc -o buzzertest buzzertest.c -lMyPeri -lpthread -L.
 	arm-linux-gnueabi-gcc -o textlcdtest textlcdtest.c -lMyPeri -L.
 	arm-linux-gnueabi-gcc -o temperaturetest temperatureTest.c -lMyPeri -L.
-libMyPeri.a: led.o led.h button.o button.h fnd.o fnd.h fnddrv.h buzzer.o buzzer.h colorLed.o colorLed.h textlcd.o textlcd.h textlcddrv.h temperature.h temperature.o
-	arm-linux-gnueabi-ar rc libMyPeri.a led.o button.o fnd.o buzzer.o colorLed.o textlcd.o temperature.o
+	arm-linux-gnueabi-gcc -o accelMagGyrotest accelMagGyrotest.c -lMyPeri -L.
+	
+libMyPeri.a: led.o led.h button.o button.h fnd.o fnd.h fnddrv.h buzzer.o buzzer.h colorLed.o colorLed.h textlcd.o textlcd.h textlcddrv.h temperature.h temperature.o accelMagGyro.h accelMagGyro.o
+	arm-linux-gnueabi-ar rc libMyPeri.a led.o button.o fnd.o buzzer.o colorLed.o textlcd.o temperature.o accelMagGyro.o
 led.o: led.h led.c
 	arm-linux-gnueabi-gcc -c led.c -o led.o
 button.o: button.h button.c
@@ -15,12 +17,14 @@ button.o: button.h button.c
 fnd.o: fnd.h fnddrv.h fnd.c
 	arm-linux-gnueabi-gcc -c fnd.c -o fnd.o
 buzzer.o: buzzer.h buzzer.c
-	arm-linux-gnueabi-gcc -c buzzer.c -o buzzer.o
+	arm-linux-gnueabi-gcc -c buzzer.c -o buzzer.o -lpthread
 colorLed.o: colorLed.h colorLed.c
 	arm-linux-gnueabi-gcc -c colorLed.c -o colorLed.o
 textlcd.o: textlcd.h textlcddrv.h textlcd.c
 	arm-linux-gnueabi-gcc -c textlcd.c -o textlcd.o
 temperature.o: temperature.h temperature.c
 	arm-linux-gnueabi-gcc -c temperature.c -o temperature.o
+accelMagGyro.o: accelMagGyro.h accelMagGyro.c
+	arm-linux-	gnueabi-gcc -c accelMagGyro.c -o accelMagGyro.o
 
 
