@@ -86,8 +86,8 @@ void* buttonThFunc1(void *arg)
         readSize = read(fd, &Button_EVENT, sizeof(Button_EVENT)); //버튼 읽음         
         if (readSize != sizeof(Button_EVENT)) 
             continue;      
-        Send.messageNum=1;                       
-        Send.keyInput=Button_EVENT.code;                          // 버튼 내용 넣어줌 
+        Send.messageNum=Button_EVENT.type;
+        Send.keyInput=Button_EVENT.code;
         Send.pressed=Button_EVENT.value;
         msgsnd(msgID, &Send, sizeof(Send)-4,0);                   // 메세지큐 사용해서 버튼 정보 보냄
     }
@@ -96,25 +96,27 @@ void* buttonThFunc1(void *arg)
 void* buttonThFunc2(void *arg) 
 {
     int returnValue=0;
+    
     BUTTON_MSG_T Recieve;
     while(1){
         returnValue=msgrcv(msgID, &Recieve, sizeof(Recieve)-4, 0, 0);
         if(returnValue==-1) continue;
-	    if ( Recieve.messageNum == 1)
+	    if ( Recieve.messageNum == EV_KEY)
 	    {
 		    printf("EV_KEY(");
 		    switch(Recieve.keyInput) // 어떤 버튼 눌렀는지
 		    {
-                case KEY_HOME: printf("1Home key):"); break;     // 
-                case KEY_BACK: printf("2Left):"); break;
-                case KEY_SEARCH: printf("3Right):"); break;       // 화면상변화			     
-                case KEY_MENU: printf("4OK):"); break;        // 화면상변화     
-                case KEY_VOLUMEUP: printf("5Volume On/Off):"); break;       // 화면상변화, 아이템창에서 |아이템창나가기|옷|특식/간식|   |     | =>left, right 사용                
-			    //case KEY_VOLUMEDOWN: printf("6Volume On/Off):"); break; //buzzer
-                default: break;
+			    case KEY_VOLUMEUP: printf("5OK):"); break;       // 화면상변화, 아이템창에서 |아이템창나가기|옷|특식/간식|   |     | =>left, right 사용
+			    case KEY_HOME: printf("1Home key):"); break;     // 
+			    case KEY_SEARCH: printf("3Left):"); break;       // 화면상변화
+			    case KEY_BACK: printf("Back key):"); break;     
+			    case KEY_MENU: printf("4Right):"); break;        // 화면상변화
+			    case KEY_VOLUMEDOWN: printf("6Volume On/Off):"); break; //buzzer
+               default: break;
+
 		    }
-	        //if ( Recieve.pressed ) printf("pressed\n"); // 버튼 눌렸는지 안눌렸는지
-	        //else printf("released\n");
+	        if ( Recieve.pressed ) printf("pressed\n"); // 버튼 눌렸는지 안눌렸는지
+	        else printf("released\n");
 	    } 
 	    else;
     }

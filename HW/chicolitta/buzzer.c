@@ -5,27 +5,75 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <dirent.h>
+#include <sys/msg.h>
+#include <pthread.h>
+
 #define BUZZER_BASE_SYS_PATH "/sys/bus/platform/devices/"
 #define BUZZER_FILENAME "peribuzzer"
 #define BUZZER_ENABLE_NAME "enable"
 #define BUZZER_FREQUENCY_NAME "frequency"
+#define MAX_SCALE_STEP 8
 
 
-//buzzer-미니게임성공, 레벨업, 체력 적을때 넣을수도
-//교수님이 보내주신 음악 메인BGM쓰고 음향꺼놓는 것도 시현할 때 보여주기 => 봐서. 메인BGM만 끄도록?
-int fd;
+static int fd;
 char gBuzzerBaseSysDir[128]; ///sys/bus/platform/devices/peribuzzer.XX 가 결정됨
 
+const int musicScale[MAX_SCALE_STEP] =
+{
+    262, /*do*/ 294,330,349,392,440,494, /* si */ 523
+};
+
+pthread_t buzzerTh_id;
+int buzzermsgID;
+ 
 int buzzerInit(void)
 {
 	findBuzzerSysPath();
-	fd = open(gBuzzerBaseSysDir, O_WRONLY);
+
+    buzzermsgID = msgget (MESSAGE_ID, IPC_CREAT|0666);	
+    if(buzzermsgID == -1){
+		printf ("buzzer Cannot get msgQueueID, Return!\r\n");
+		return -1;
+	}
+    pthread_create(&buzzerTh_id, NULL, &buzzerThFunc, NULL);
+}
+
+void* buzzerThFunc(void *arg) 
+{
+    int returnValue=0;
+    BUZZER_MSG_T Receive;
+    while(1)
+    {
+        returnValue = msgrcv(buzzermsgID, &Receive, sizeof(Receive)-4, 0, 0);
+        if(returnValue == -1) continue;
+	    
+        if ( Receive.messageNum == 1)
+	    {   
+            switch(Receive.buzzer_msg) // 어떤 버튼 눌렀는지
+		    {
+			    case 1: {printf("MainIntro Sound)\r\n"); buzzerMainIntro();} break; // 화면상변화, 아이템창에서 |아이템창나가기|옷|특식/간식|   |     | =>left, right 사용
+               default: break;
+		    }
+	    } 
+	    else;
+    }
+}
+
+void buzzerMainIntro(void)
+{
+    buzzerPlaySong(musicScale[0]);
+    usleep(500000);
+    buzzerPlaySong(musicScale[2]);
+    usleep(500000);
+    buzzerPlaySong(musicScale[4]);
+    usleep(500000);
+    buzzerStopSong();
 }
 
 int buzzerPlaySong(int scale)
-{
-		setFrequency(scale);
-		buzzerEnable(1);
+{	
+    setFrequency(scale);
+	buzzerEnable(1);
 }
 
 int buzzerStopSong(void)
@@ -35,7 +83,8 @@ int buzzerStopSong(void)
 
 int buzzerExit(void)
 {
-	close(fd);
+	pthread_join(buzzerTh_id, NULL);
+    close(fd);
 }
 
 int findBuzzerSysPath()
@@ -61,29 +110,22 @@ int findBuzzerSysPath()
 
 void buzzerEnable(int bEnable)
 {
-		char path[200];
-		sprintf(path,"%s%s",gBuzzerBaseSysDir,BUZZER_ENABLE_NAME);
-		int fd=open(path,O_WRONLY);
+    char path[200];
+	sprintf(path,"%s%s",gBuzzerBaseSysDir,BUZZER_ENABLE_NAME);
+	fd=open(path,O_WRONLY);
 		if ( bEnable) 		write(fd, &"1", 1);
 		else 				write(fd, &"0", 1);
-		close(fd);
+    close(fd);
 }
 
 void setFrequency(int frequency)
-{
-		char path[200];
-		sprintf(path,"%s%s",gBuzzerBaseSysDir,BUZZER_FREQUENCY_NAME);
-		int fd=open(path,O_WRONLY);
-		dprintf(fd, "%d", frequency);
-		close(fd);
+{    
+    char path[200];
+	sprintf(path,"%s%s",gBuzzerBaseSysDir,BUZZER_FREQUENCY_NAME);
+	fd=open(path,O_WRONLY);
+    dprintf(fd, "%d", frequency);
+    close(fd);
 }
-
-
-
-
-
-
-
 
 void doHelp()
 {
