@@ -13,13 +13,13 @@
 #define PROBE_FILE "/proc/bus/input/devices" //PPT에 제시된 "이 파일을 까보면 event? 의 숫자를 알수 있다"는 바로 그 파일
 #define HAVE_TO_FIND_1 "N: Name=\"ecube-button\"\n"
 #define HAVE_TO_FIND_2 "H: Handlers=kbd event"
-//////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
 int fd_button;
 int msgID;
 pthread_t buttonTh_id1, buttonTh_id2;
 struct input_event Button_EVENT;
-/////////////////////////////////////////////////////////////////////////////////////////////
 
+/////////////////////////////////////////////////////////////////////////////////////////////
 int probeButtonPath(char *newPath)   {
    int returnValue = 0; //button에 해당하는 event#을 찾았나?
    int number = 0; //찾았다면 여기에 집어넣자
@@ -55,7 +55,7 @@ int probeButtonPath(char *newPath)   {
        sprintf (newPath,"%s%d",INPUT_DEVICE_LIST,number);
    return returnValue;
 }
-/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
 int buttonInit(void)
 {
     char buttonPath[200] = {0,};
@@ -75,7 +75,8 @@ int buttonInit(void)
     pthread_create(&buttonTh_id1, NULL, &buttonTh_snd, NULL);
     return 1;
 }
-////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////// 버튼 thread 함수 => 메세지를 받음 ////////////////////////////
 void *buttonTh_snd(void *arg)
 {
     int readSize, inputIndex;
@@ -91,6 +92,10 @@ void *buttonTh_snd(void *arg)
         msgsnd(msgID, &Send, sizeof(Send)-4,0);                   // 메세지큐 사용해서 버튼 정보 보냄
     }
 }
+
+
+/*================================= 버튼함수 => 메세지를 받음 ==========================================*/
+// tting.c에서 inven_Func과 main함수에서 사용
 
 int button_rcv()
 {
