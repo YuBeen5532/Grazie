@@ -2,9 +2,16 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <pthread.h>
+#include "kakaotalk.h"
 
+pthread_t kakaoTh_id;
 
-void kakaotalk(void)
+void kakao(void){
+    pthread_create(&kakaoTh_id, NULL, &kakaotalk, NULL);
+}
+
+void* kakaotalk(void* arg)
 {
     pid_t pid;
     int status;

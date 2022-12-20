@@ -7,12 +7,15 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include "fnd.h"
+#include "fnddrv.h"
 
 #define FND_DRIVER_NAME "/dev/perifnd"
 
 int main(void)
 {
-fndDisp(990819,10);
+fndInit();
+fnd_hour(16 , 4);
 
 return 0;
 }
