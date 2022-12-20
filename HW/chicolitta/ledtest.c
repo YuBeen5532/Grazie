@@ -8,18 +8,19 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include "led.h"
 #define LED_DRIVER_NAME "/dev/periled"
 
 int main(void)
 {
 
 // open driver
-ledLibInit();
+ledInit();
 ledOnOff (6, 1);
 int ledValue = ledStatus();
 printf("ledValue : %d\n", ledValue);
 
 sleep(3000); //delay
-ledLibExit();
+ledExit();
 return 0;
 }

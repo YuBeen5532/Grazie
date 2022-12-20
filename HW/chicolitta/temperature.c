@@ -45,7 +45,7 @@ char * spi_read_lm74(int file)
     return gbuf;
 }
 
-double temp_read(void){
+float temp_read(void){
 
     char *buffer; 
     int file;
@@ -62,8 +62,8 @@ double temp_read(void){
         for (i=31;i > 12; i--)
         value |= (1<<i); //1로 비트를 채움
     }
-    //다 바꿈
-    double temp = (double)value*0.0625; 
+    
+    float temp = (float)value*0.0625; 
     printf("%f\n",temp);
     return temp;
 }
