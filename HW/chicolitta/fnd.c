@@ -9,7 +9,7 @@
 
 int fd_fnd;
 
-
+/*======================= FND에 인게임 일차와 시간 출력 ==============================*/
 void fnd_hour(int hour , int day)
 {
 	stFndWriteForm stWriteData;
@@ -21,31 +21,37 @@ void fnd_hour(int hour , int day)
 	stWriteData.DataDot[2] =  1;
 	int hour_temp, day_temp;	
 	
+    // 앞 세자리: 게임 일차
 	day_temp = day %1000; stWriteData.DataNumeric[0] = day_temp /100;
 	day_temp = day %100; stWriteData.DataNumeric[1] = day_temp /10;
 	stWriteData.DataNumeric[2] = day %10;
-	
+    // 뒷 세자리: 인게임 시간	
 	hour_temp = hour % 1000; stWriteData.DataNumeric[3]= hour_temp /100;
 	hour_temp = hour % 100; stWriteData.DataNumeric[4]= hour_temp /10;
 	stWriteData.DataNumeric[5] = hour % 10;
 	
-	write(fd_fnd, &stWriteData, sizeof(stFndWriteForm));	
+	write(fd_fnd, &stWriteData, sizeof(stFndWriteForm));	 // FND에 값 출력
 }
+/*=====================================================================================*/
 
-
+/*================================== FND INIT ==============================*/
 int fndInit(void){
-	fd_fnd = open(FND_DRIVER_NAME,O_RDWR);
+	fd_fnd = open(FND_DRIVER_NAME,O_RDWR); // file open
 	if ( fd_fnd < 0 )
 	{
 		perror("driver open error.\n");
 		return 0;
 	}
 }
+/*=====================================================================================*/
 
+/*================================== FND EXIT ==============================*/
 int fndExit(void){
-	close(fd_fnd);
+	close(fd_fnd);  // file close
 	return 1;
 }
+/*=====================================================================================*/
+
 
 int fndDisp(int num , int dotflag) //0-999999 숫자, 비트로 인코딩된 dot on/off
 {

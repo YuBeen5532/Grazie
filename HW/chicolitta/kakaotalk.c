@@ -7,25 +7,34 @@
 
 pthread_t kakaoTh_id;
 
+/*======================= 카카오톡 thread 생성 ==============================*/
 void kakao(void){
     pthread_create(&kakaoTh_id, NULL, &kakaotalk, NULL);
 }
+/*===========================================================================*/
 
+/*======================= 카카오톡 thread 함수 ==============================*/
 void* kakaotalk(void* arg)
 {
     pid_t pid;
     int status;
     printf("open API\n");
+
     pid = fork();
 
-    if(pid > 0) // parent process
+    // parent process
+    if(pid > 0) 
     {
         printf("parent\n");
+        // child process 기다림
         waitpid(pid, &status, 0);
     }  
-    else if(pid == 0) // child process
+    // child process
+    else if(pid == 0) 
     {
         printf("child\n");
+
+        // exec함수를 사용하여 카카오톡 api를 위한 프로그램 실행
         execl("/home/ecube/kakao.py", NULL);
         printf("fail to execute KakaoTalk\n");
     }         
@@ -34,9 +43,6 @@ void* kakaotalk(void* arg)
     
     printf("API end\n");
 }
+/*===========================================================================*/
 
 
-// for test
-// void main(){
-//	kakaotalk();
-// }
