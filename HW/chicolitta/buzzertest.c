@@ -2,20 +2,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#define MAX_SCALE_STEP 8
-
+#include "buzzer.h"
 char gBuzzerBaseSysDir[128]; ///sys/busz/platform/devices/peribuzzer.XX 가 결정됨
-const int musicScale[MAX_SCALE_STEP] =
+#define MAX_SCALE_STEP 8 
+
+const int MusicScale[8] =
 {
     262, /*do*/ 294,330,349,392,440,494, /* si */ 523
 };
 
-
-
 int main(int argc , char **argv)
 {
     int freIndex;
-    if (argc < 2 || findBuzzerSysPath() )
+    if (argc < 2 || FindBuzzerSysPath() )
     {
         printf("Error!\n");
         doHelp();
@@ -34,11 +33,11 @@ int main(int argc , char **argv)
 
     if ( freIndex == 0)// disable
     {
-        buzzerStopSong(0);
+        buzzerStopSong();
     }
     else
     {
-        buzzerPlaySong(musicScale[freIndex-1]);
+        buzzerPlaySong(MusicScale[freIndex-1]);
     }
     
     return 0;

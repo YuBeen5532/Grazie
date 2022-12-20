@@ -1,13 +1,15 @@
 #ifndef _BUZZER_H_
 #define _BUZZER_H_
+
+
 int buzzerInit(void);
 int buzzerPlaySong(int scale);
 int buzzerStopSong(void);
 int buzzerExit(void);
-
-int findBuzzerSysPath();
+int buzzerMinigame();
+int FindBuzzerSysPath();
 void doHelp(void);
-void buzzerEnable(int bEnable);
-void setFrequency(int frequency);
+void BuzzerEnable(int bEnable);
+void SetFrequency(int frequency);
 #endif
 
