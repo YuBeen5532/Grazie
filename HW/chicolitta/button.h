@@ -1,7 +1,8 @@
 #ifndef _BUTTON_H_
 #define _BUTTON_H_
 
-#define MESSAGE_ID 1122
+#define BUTTON_MESSAGE_ID 300
+#define timeout 30
 
 typedef struct
 {
@@ -11,8 +12,9 @@ int pressed;
 } BUTTON_MSG_T;
 
 int buttonInit(void);
-void *buttonThFunc1(void *arg);
-void *buttonThFunc2(void *arg);
+void *buttonTh_snd(void *arg);
+int button_rcv(void);
 int buttonExit(void);
 
 #endif
+
