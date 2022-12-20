@@ -138,7 +138,7 @@ int main(void)
             {
                 case 4: feed_Func(lv_state);  break;                // 밥주기
                 case 5: water_Func(lv_state); break;                // 물주기
-                case 6: minigame_Func(lv_state); break;             // 산책하기
+                case 6: minigame_Func(); break;             // 산책하기
                 case 7: clean_Func(lv_state); break;                // 청소하기
                 case 8: lv_state = inven_Func(lv_state); break;     // 인벤토리 
             }
