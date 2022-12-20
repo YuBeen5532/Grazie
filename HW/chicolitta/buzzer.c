@@ -13,30 +13,27 @@
 
 #define MAX_SCALE_STEP 8 
 
-const int Musicscale[8] =
+const int Musicscale[8] = // 음계
 {
     262, /*do*/ 294,330,349,392,440,494, /* si */ 523
 };
- 
 
-//buzzer-미니게임성공, 레벨업, 체력 적을때 넣을수도
-//교수님이 보내주신 음악 메인BGM쓰고 음향꺼놓는 것도 시현할 때 보여주기 => 봐서. 메인BGM만 끄도록?
 int fd_buzzer;
 char gBuzzerBaseSysDir[128]; ///sys/bus/platform/devices/peribuzzer.XX 가 결정됨
 
-int buzzerInit(void)
+int buzzerInit(void) 
 {
 	FindBuzzerSysPath();
-	fd_buzzer = open(gBuzzerBaseSysDir, O_WRONLY);
+	fd_buzzer = open(gBuzzerBaseSysDir, O_WRONLY); // 경로 설정
 }
 
-int buzzerPlaySong(int scale)
+int buzzerPlaySong(int scale) // 한 음 재생
 {
 		SetFrequency(scale);
 		BuzzerEnable(1);
 }
 
-int buzzerMinigame()
+int buzzerMinigame() // 미니게임에서 사용할 buzzer 효과음 및 colorled 설정
 {
     for(int i=1; i<8; i+=2){
        buzzerPlaySong(Musicscale[i]);
@@ -44,17 +41,17 @@ int buzzerMinigame()
         pwmSetPercent(0,1);
         pwmSetPercent(100,2);
         usleep(200000);
-        //Red 출력
+        //이때 colorled Red 출력할 것
         pwmSetPercent(100,0);
         pwmSetPercent(0,1);
         pwmSetPercent(0,2);
         usleep(200000);
-        //blue 출력
+        //이때 colorled Blue 출력할 것
         pwmSetPercent(0,0);
         pwmSetPercent(100,1);
         pwmSetPercent(0,2);
         usleep(200000);
-        //Green출력
+        //이때 colorled Green 출력할 것
        buzzerStopSong();
     }
     pwmSetPercent(100,0);
@@ -63,7 +60,7 @@ int buzzerMinigame()
        
 }
 
-int buzzerStopSong(void)
+int buzzerStopSong(void) // buzzer 멈추기
 {
 	BuzzerEnable(0);
 }
@@ -73,7 +70,7 @@ int buzzerExit(void)
 	close(fd_buzzer);
 }
 
-void SetFrequency(int frequency)
+void SetFrequency(int frequency) // 음 설정
 {
 		char path[200];
 		sprintf(path,"%s%s",gBuzzerBaseSysDir,BUZZER_FREQUENCY_NAME);
@@ -82,7 +79,7 @@ void SetFrequency(int frequency)
 		close(fd_buzzer);
 }
 
-void BuzzerEnable(int bEnable)
+void BuzzerEnable(int bEnable) // 부저 준비
 {
 		char path[200];
 		sprintf(path,"%s%s",gBuzzerBaseSysDir,BUZZER_ENABLE_NAME);

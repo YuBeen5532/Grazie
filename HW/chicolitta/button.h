@@ -4,11 +4,11 @@
 #define BUTTON_MESSAGE_ID 300
 #define timeout 30
 
-typedef struct
+typedef struct // 메시지큐 구조체
 {
 long int messageNum;
-int keyInput;
-int pressed;
+int keyInput; // 어떤 버튼
+int pressed; // 눌렸는지 여부
 } BUTTON_MSG_T;
 
 int buttonInit(void);

@@ -19,7 +19,7 @@
 #include "colorLed.h"
  
  
-int pwmActiveAll(void)
+int pwmActiveAll(void) // PWM 채널 활성화
 {
 int fd = 0;
 fd = open ( COLOR_LED_DEV_R_ PWM_EXPORT, O_WRONLY);
@@ -34,7 +34,7 @@ close(fd);
 return 1;
 }
  
-int pwmInactiveAll(void)
+int pwmInactiveAll(void) // PWM 채널 비활성화
 {
 int fd = 0;
 fd = open ( COLOR_LED_DEV_R_ PWM_UNEXPORT, O_WRONLY);
@@ -50,7 +50,7 @@ return 1;
 }
  
  
-int pwmSetDuty(int dutyCycle, int pwmIndex)
+int pwmSetDuty(int dutyCycle, int pwmIndex) // PUM Duty Cycle 지정
 {
 int fd = 0;
 switch (pwmIndex)
@@ -72,7 +72,7 @@ return 1;
 }
  
  
-int pwmSetPeriod(int Period, int pwmIndex)
+int pwmSetPeriod(int Period, int pwmIndex) // PWM 주기 설정
 {
 int fd = 0;
 switch (pwmIndex)
@@ -96,7 +96,7 @@ return 1;
  
  
  
-int pwmSetPercent(int percent, int ledColor)
+int pwmSetPercent(int percent, int ledColor) // PWM %값 지정(수치 넣으면 자동으로 시간 생성)
 {
 if ((percent <0) || (percent > 100))
 {
@@ -111,7 +111,7 @@ return 0;
  
  
  
-int pwmStartAll(void)
+int pwmStartAll(void) // PWM 시작
 {
 int fd = 0;
 fd = open ( COLOR_LED_DEV_R_ PWM_ENABLE, O_WRONLY);
@@ -132,15 +132,15 @@ return 1;
 int pwmLedInit(void)
 { //Initialize
 pwmActiveAll();
-pwmSetDuty(0, 0); //R<-0
-pwmSetDuty(0, 1); //G<-0
-pwmSetDuty(0, 2); //B<-0
+pwmSetDuty(0, 0); //R <- 0
+pwmSetDuty(0, 1); //G <- 0
+pwmSetDuty(0, 2); //B <- 0
 pwmSetPeriod(PWM_PERIOD_NS, 0); pwmSetPeriod(PWM_PERIOD_NS, 1); pwmSetPeriod(PWM_PERIOD_NS, 2);
 pwmStartAll();
 return 0;
 }
  
-int color_lv_up(void) //lv up 달성시 led on
+int color_lv_up(void) // 띵코리타 level up -> colorlde 점등되는 효과
 {
     for(int i=0; i<3; i++)
     {
@@ -162,14 +162,14 @@ int color_lv_up(void) //lv up 달성시 led on
     }
         pwmSetPercent(100,0);
         pwmSetPercent(100,1);
-        pwmSetPercent(100,2);
+        pwmSetPercent(100,2); //white
 }
 
-int color_dead(void)
+int color_dead(void) // 띵코리타가 죽었을 때 colorled 출력
 {
     pwmSetPercent(0,0);
     pwmSetPercent(0,1);
-    pwmSetPercent(100,2);
+    pwmSetPercent(100,2); //red
     usleep(800000);
 }
 
