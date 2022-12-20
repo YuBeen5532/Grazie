@@ -3,7 +3,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
-#include "colorLed.h"
 #define COLOR_LED_DEV_R_ "/sys/class/pwm/pwmchip0/"
 #define COLOR_LED_DEV_G_ "/sys/class/pwm/pwmchip1/"
 #define COLOR_LED_DEV_B_ "/sys/class/pwm/pwmchip2/"

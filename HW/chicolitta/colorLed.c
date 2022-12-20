@@ -15,7 +15,6 @@
 #define PWM_COLOR_G 1
 #define PWM_COLOR_B 2
 #define PWM_PERIOD_NS 1000000 //ns. = 1ms = 1khz 
-
 #include "colorLed.h"
 
 

@@ -2,7 +2,6 @@
 #include "fnddrv.h"
 #include <unistd.h>
 #include <fcntl.h>
-#include <stdio.h>
 
 #define FND_DRIVER_NAME "/dev/perifnd"
 
