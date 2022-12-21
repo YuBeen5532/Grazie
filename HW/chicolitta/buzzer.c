@@ -80,33 +80,35 @@ void SetFrequency(int frequency) // 음 설정
 }
 /*========================================================================================*/
 
-/*============================== Buzzer Stop ==================================*/
+/*============================== Buzzer Stop =================================*/
 int buzzerStopSong(void) 
 {	BuzzerEnable(0); }
 /*========================================================================================*/
 
-/*========================= 미니게임 buzzer 효과음 및 colorled 설정 ========================*/
+/*=================== 미니게임 성공시 buzzer 효과음 및 colorled 설정 ======================*/
 int buzzerMinigame() 
 {
     for(int i=1; i<8; i+=2){
+        // for 반복문을 이용하여 Frequency 바꿔가며 Buzzer음 출력
         buzzerPlaySong(Musicscale[i]);
+        // ColorLED Red 출력
         pwmSetPercent(0,0);
         pwmSetPercent(0,1);
         pwmSetPercent(100,2);
         usleep(200000);
-        // colorled Red 출력할 것
+        // ColorLED Blue 출력
         pwmSetPercent(100,0);
         pwmSetPercent(0,1);
         pwmSetPercent(0,2);
         usleep(200000);
-        // colorled Blue 출력할 것
+        // ColorLED Green 출력
         pwmSetPercent(0,0);
         pwmSetPercent(100,1);
         pwmSetPercent(0,2);
-        usleep(200000);
-        //  colorled Green 출력할 것
+        usleep(200000);       
         buzzerStopSong();
     }
+    // ColorLED White 출력
     pwmSetPercent(100,0);
     pwmSetPercent(100,1);
     pwmSetPercent(100,2);       
