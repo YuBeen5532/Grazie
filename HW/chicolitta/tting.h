@@ -3,10 +3,11 @@
 
 #define COUNT_MESSAGE_ID 600
 
+// COUNT를 위한 메세지 구조체
 typedef struct
 {
-long int messageType;
-int count_msg; //(타이틀화면1, 성장화면2, 밥주기3, 물주기4, 청소하기5)
+    long int messageType;
+    int count_msg; 
 } COUNT_MSG_T;
 
 #endif
